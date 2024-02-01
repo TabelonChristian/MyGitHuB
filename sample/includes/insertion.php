@@ -2,64 +2,35 @@
 include 'db_connection.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if 'name' and 'email' are present in the POST data
-    if (isset($_POST['name']) && isset($_POST['email'])) {
-        // Handle user insertion
-        $name = $_POST['name'];
-        $email = $_POST['email'];
+    // Validate and sanitize input data
+    $productName = $_POST['productName'];
+    $quantity = $_POST['quantity'];
 
-        try {
-            // Use the function to get a PDO connection
-            $conn = connectDB();
+    try {
+        // Use the function to get a PDO connection
+        $conn = connectDB();
 
-            // Set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        // Set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-            $sql = "INSERT INTO users (name, email) VALUES (:name, :email)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':name', $name);
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
+        $sql = "INSERT INTO orders (product_name, quantity, customer_id, order_date) 
+                VALUES (:productName, :quantity, :customerID, NOW())"; // Assuming NOW() provides the current date
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':productName', $productName);
+        $stmt->bindParam(':quantity', $quantity);
+        $stmt->bindParam(':customerID', $customerID); // You need to set $customerID with the actual customer ID
 
-            // Redirect back to the user data page after successful insertion
-            header("Location: ../index.php");
-            exit();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        } finally {
-            // Always close the connection
-            if ($conn) {
-                $conn = null;
-            }
-        }
-    } elseif (isset($_POST['productName']) && isset($_POST['quantity'])) {
-        // Handle order insertion
-        $productName = $_POST['productName'];
-        $quantity = $_POST['quantity'];
+        $stmt->execute();
 
-        try {
-            // Use the function to get a PDO connection
-            $conn = connectDB();
-
-            // Set the PDO error mode to exception
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            $sql = "INSERT INTO orders (product_name, quantity) VALUES (:productName, :quantity)";
-            $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':productName', $productName);
-            $stmt->bindParam(':quantity', $quantity);
-            $stmt->execute();
-
-            // Redirect back to the order data page after successful insertion
-            header("Location: ../order.php");
-            exit();
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        } finally {
-            // Always close the connection
-            if ($conn) {
-                $conn = null;
-            }
+        // Redirect back to the order data page after successful insertion
+        header("Location: ../order.php");
+        exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    } finally {
+        // Always close the connection
+        if ($conn) {
+            $conn = null;
         }
     }
 }

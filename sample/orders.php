@@ -86,10 +86,9 @@
         )";
         $conn->exec($createTableSQL);
 
-        // Fetch and display data
         $stmt = $conn->query("SELECT * FROM orders");
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+        
         echo "<table>
                 <tr>
                     <th>Order ID</th>
@@ -106,6 +105,7 @@
                 </tr>";
         }
         echo "</table>";
+        
 
     } catch (PDOException $e) {
         echo "Connection failed: " . $e->getMessage();
@@ -117,7 +117,8 @@
     ?>
 
     <div class="button-container">
-        <a href="add_product.php" class="add-button">Place Order</a>
+        <a href="place_order.php" class="add-button">Place Order</a>
+        <a href="welcome.php" class="add-button">Home</a>
     </div>
 </div>
 

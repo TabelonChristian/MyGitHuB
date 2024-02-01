@@ -3,31 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Retrieve Products</title>
+    <title>Product Data</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            padding: 0;
         }
 
         #container {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
             width: 80%;
-            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
         }
 
         table {
-            border-collapse: collapse;
             width: 100%;
+            border-collapse: collapse;
             margin-top: 20px;
         }
 
@@ -47,44 +49,62 @@
             margin-top: 20px;
         }
 
-        .add-button {
+        .add-button, .edit-button, .order-button {
+            display: inline-block;
             background-color: #4caf50;
             color: white;
-            border: none;
-            padding: 10px 20px;
-            text-align: center;
+            padding: 10px 15px;
             text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
+            border-radius: 4px;
             margin-right: 10px;
             cursor: pointer;
-            border-radius: 4px;
         }
 
-        .edit-button,
-        .order-button {
-            background-color: #2196f3;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 12px;
-            cursor: pointer;
-            border-radius: 4px;
-            margin-right: 5px;
+        .add-button:hover, .edit-button:hover, .order-button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
 
 <div id="container">
-    <h2 style="text-align: center;">Product Data</h2>
+    <h2>Product Data</h2>
 
     <?php
     include 'includes/db_connection.php';
 
+    // Check if the form for adding a new product is submitted
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['product_name']) && isset($_POST['product_stocks'])) {
+        $pname = $_POST['product_name'];
+        $stock = $_POST['product_stocks'];
+
+        try {
+            // Use the function to get a PDO connection
+            $conn = connectDB();
+
+            // Set the PDO error mode to exception
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $sql = "INSERT INTO products (product_name, product_stock) VALUES (:prod, :sto)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':prod', $pname);
+            $stmt->bindParam(':sto', $stock);
+            $stmt->execute();
+
+            // Redirect back to the product data page after successful insertion
+            header("Location: product.php");
+            exit();
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+        } finally {
+            // Always close the connection
+            if ($conn) {
+                $conn = null;
+            }
+        }
+    }
+
+    // Display the product data
     try {
         $conn = connectDB();
 
@@ -129,6 +149,7 @@
 
     <div class="button-container">
         <a href="add_product.php" class="add-button">Add Product</a>
+        <a href="welcome.php" class="add-button">Home</a>
     </div>
 
 </div>

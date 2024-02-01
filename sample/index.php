@@ -130,6 +130,7 @@ try {
 
 <div class="button-container">
     <a href="insert.php" class="add-button">Add User</a>
+    <a href="welcome.php" class="add-button">Home</a>
 </div>
 
 </div>

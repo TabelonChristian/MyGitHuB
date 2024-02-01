@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
+    <title>Place Order</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -64,24 +64,31 @@
             display: block;
             text-align: center;
             margin-top: 20px;
-            color: #333;
+            color: #007BFF; /* Use the primary color of your design */
             text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 
 <div id="container">
-    <h2>Add Product</h2>
+    <h2>Place Order</h2>
 
-    <form action="product.php" method="post">
+    <form action="process_order.php" method="post">
         <label for="product_name">Product Name:</label>
         <input type="text" name="product_name" id="product_name" required>
 
-        <label for="product_stocks">Stocks:</label>
-        <input type="number" name="product_stocks" id="product_stocks" required>
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" id="quantity" required>
 
-        <button type="submit">Add Product</button>
+        <label for="customer_name">Your Name:</label>
+        <input type="text" name="customer_name" id="customer_name" required>
+
+        <button type="submit">Place Order</button>
     </form>
 
     <a href="product.php">Back to Product List</a>

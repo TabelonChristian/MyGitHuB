@@ -3,67 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User</title>
+    <title>Edit Product</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f4;
             margin: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
+            padding: 0;
         }
 
         #container {
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
             width: 80%;
-            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 50px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
         }
 
         form {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            max-width: 300px;
+            margin: 0 auto;
         }
 
         label {
             margin-bottom: 8px;
+            color: #333;
         }
 
         input {
-            padding: 10px;
+            padding: 8px;
             margin-bottom: 16px;
-            width: 100%;
-            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
 
         .button-container {
             text-align: center;
+            margin-top: 20px;
         }
 
         .update-button {
-            background-color: #2196f3;
+            background-color: #007BFF; /* Use the primary color of your design */
             color: white;
+            padding: 10px 15px;
             border: none;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            cursor: pointer;
             border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .update-button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
         }
     </style>
 </head>
 <body>
 
 <div id="container">
-    <h2 style="text-align: center;">Edit Product </h2>
+    <h2>Edit Product</h2>
 
     <?php
     include 'includes/db_connection.php';
@@ -78,18 +84,18 @@
             $stmt->bindParam(':pid', $prodID);
             $stmt->execute();
 
-            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $productData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($userData) {
-                // User data found, render the edit form
+            if ($productData) {
+                // Product data found, render the edit form
     ?>
-                <form action="includes/update_prod.php" method="post">
-                    <input type="hidden" name="pid" value="<?php echo $userData['product_id']; ?>">
-                    <label for="name">Name:</label>
-                    <input type="text" name="pname" id="pname" value="<?php echo $userData['product_name']; ?>">
+                <form action="product.php" method="post">
+                    <input type="hidden" name="pid" value="<?php echo $productData['product_id']; ?>">
+                    <label for="pname">Name:</label>
+                    <input type="text" name="pname" id="pname" value="<?php echo $productData['product_name']; ?>">
 
-                    <label for="email">Email:</label>
-                    <input type="text" name="pstock" id="pstock" value="<?php echo $userData['product_stock']; ?>">
+                    <label for="pstock">Stock:</label>
+                    <input type="text" name="pstock" id="pstock" value="<?php echo $productData['product_stock']; ?>">
 
                     <div class="button-container">
                         <button type="submit" class="update-button">Update</button>
@@ -97,7 +103,7 @@
                 </form>
     <?php
             } else {
-                echo "<p>User not found.</p>";
+                echo "<p>Product not found.</p>";
             }
         }
     } catch (PDOException $e) {
