@@ -72,26 +72,24 @@
     </style>
 </head>
 <body>
+    <div id="container">
+        <h2 style="text-align: center;">Add Schedule</h2>
 
-<div id="container">
-    <h2 style="text-align: center;">Add Schedule</h2>
+        <form action="includes/insert_schedule.php" method="post">
+            <label for="s_date">Date:</label>
+            <input type="date" name="s_date" id="s_date" required>
 
-    <form action="includes/insert_prod.php" method="post">
-        <label for="product_name">Date:</label>
-        <input type="date" name="s_date" id="product_name" required>
+            <label for="s_status">Status:</label>
+            <input type="text" name="s_status" id="s_status" value='Available' required>
 
-        <label for="product_stocks">Status:</label>
-        <input type="text" name="s_status" id="product_stocks" required valule='Available' required>
+            <div class="button-container">
+                <button type="submit">Add Schedule</button>
+            </div>
+        </form>
 
         <div class="button-container">
-            <button type="submit">Add Schedule</button>
+            <a href="schedule.php">Back to Schedule Data</a>
         </div>
-    </form>
-
-    <div class="button-container">
-        <a href="product.php">Back to Appointment Data</a>
     </div>
-</div>
-
 </body>
 </html>

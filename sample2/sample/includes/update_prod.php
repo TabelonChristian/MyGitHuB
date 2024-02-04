@@ -2,29 +2,27 @@
 
 include 'db_connection.php';
 
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Validate and sanitize input data
-    $pid = $_POST[""];
-    $pname = $_POST[""];
-    $pstock = $_POST[""];
+    $sid = $_POST[""]; // Replace with the actual name of the form field for schedule ID
+    $sdate = $_POST[""]; // Replace with the actual name of the form field for schedule date
+    $sstatus = $_POST[""]; // Replace with the actual name of the form field for schedule status
   
     // Perform database update
     try {
-
         $conn = connectDB();
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sql = "UPDATE products SET product_name = :pname, product_stock = :pstock WHERE product_id = :id";
+        $sql = "UPDATE schedule_table SET s_date = :sdate, s_status = :sstatus WHERE schedule_id = :id";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':id', $pid);
-        $stmt->bindParam(':pname', $pname);
-        $stmt->bindParam(':pstock', $pstock);
+        $stmt->bindParam(':id', $sid);
+        $stmt->bindParam(':sdate', $sdate);
+        $stmt->bindParam(':sstatus', $sstatus);
 
         $stmt->execute();
 
-        // Redirect to the page displaying the updated user or any other page
-        header("Location: ../product.php?error=success");
+        // Redirect to the page displaying the updated schedule or any other page
+        header("Location: ../appointments.php?error=success"); // Change the location as needed
         exit();
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
@@ -33,3 +31,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+

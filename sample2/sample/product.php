@@ -12,7 +12,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            height: 100vh;  
         }
 
         #container {
@@ -80,11 +80,11 @@
 <div id="container">
     <h2 style="text-align: center;">Appointment Data</h2>
 
-<?php
+    <?php
 include 'includes/db_connection.php';
 
 try {
-    $conn = connectDB(); 
+    $conn = connectDB();
 
     if ($conn) {
         $sql = "SELECT s_id, s_date, s_status FROM schedule_table";
@@ -123,6 +123,7 @@ try {
     }
 }
 ?>
+
 
 <div class="button-container">
     <a href="add_product.php" class="add-button">Schedule Appointment</a>

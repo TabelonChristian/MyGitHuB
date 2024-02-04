@@ -1,17 +1,46 @@
-
 <?php
-                
+include('includes/db_connection.php');
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $selectedOption = $_POST['selectOption'];
+    $product = $_POST['product'];
 
-                    
-                ?>
+    try {
+        // Use the function to get a PDO connection
+        $conn = connectDB();
+
+        // Set the PDO error mode to exception
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Insert data into the schedule_table
+        $sql = "INSERT INTO schedule_table (s_id, s_date, s_status) VALUES (:s_id, :s_date, :s_status)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':s_id', $selectedOption);
+        $stmt->bindParam(':s_date', $product);
+        $stmt->bindParam(':s_status', $status); // Provide a value for status
+
+        $stmt->execute();
+
+        // Redirect back to the schedule data page after successful insertion
+        header("Location: ../schedule.php");
+        exit();
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    } finally {
+        // Always close the connection
+        if ($conn) {
+            $conn = null;
+        }
+    }
+}
+?>
 
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add User</title>
+    <title>Add Schedule</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -66,30 +95,28 @@
 <body>
 
 <div id="container">
-    <h2 style="text-align: center;">ORDERS</h2>
+    <h2 style="text-align: center;">SCHEDULE</h2>
 
-    <form action="includes/insertion.php" method="post">
-                <label for="selectOption">Select Customer:</label>
-                    <select name="selectOption" id="selectOption">
-                        <?php
-                        include('includes/db_connection.php');
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <label for="selectOption">Select Customer:</label>
+        <select name="selectOption" id="selectOption">
+            <?php
+            try {
+                $conn = connectDB();
+                $stmt = $conn->query("SELECT * FROM users");
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            } catch (PDOException $e) {
+                die("Query failed: " . $e->getMessage());
+            }
 
-                            try {
-                                 $conn = connectDB();
-                                $stmt = $conn->query("SELECT * FROM users");   
-                                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-                            } catch (PDOException $e) {
-                                die("Query failed: " . $e->getMessage());
-                            }
-                            
-                        foreach ($result as $row) {
-                            echo "<option value='{$row['id']}'>{$row['name']}</option>";
-                        }
-                        ?>
-                    </select>
+            foreach ($result as $row) {
+                echo "<option value='{$row['id']}'>{$row['name']}</option>";
+            }
+            ?>
+        </select>
 
-        <label for="email">Products</label>
-        <input type="text" id="email" name="email" required>
+        <label for="product">Schedule Date:</label>
+        <input type="date" id="product" name="product" required>
 
         <button type="submit">Insert</button>
     </form>

@@ -1,9 +1,13 @@
 <?php
 include 'db_connection.php';
 
+// ...
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $pname = $_POST['s_date'];
-    $stock = $_POST['s_status'];
+    $selectedDate = $_POST['s_date'];
+    $status = $_POST['s_status'];
+
+    // Assuming you have a patient ID, retrieve it from the session or wherever it's stored
+    $patientId = 1; // Replace with actual patient ID retrieval
 
     try {
         // Use the function to get a PDO connection
@@ -12,14 +16,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Set the PDO error mode to exception
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        $sql = "INSERT INTO schedule_table   (s_date, s_status) VALUES (:s_date, :s_status)";
+        // Insert appointment into the schedule_table
+        $sql = "INSERT INTO schedule_table (s_id, s_date, s_status) VALUES (:s_id, :s_date, COALESCE(:s_status, 'default_value'))";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':s_date', $pname);
-        $stmt->bindParam(':s_status', $stock);
-        $stmt->execute();
+        $stmt->bindParam(':s_id', $selectedOption);
+        $stmt->bindParam(':s_date', $product);
+        $stmt->bindParam(':s_status', $status);
 
-        // Redirect back to the user data page after successful insertion
-        header("Location: ../product.php");
+
+        // Redirect back to the schedule data page after successful insertion
+        header("Location: ../orders.php");
         exit();
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
@@ -30,4 +36,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+// ...
+
 ?>
