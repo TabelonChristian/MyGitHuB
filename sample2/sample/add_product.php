@@ -75,7 +75,7 @@
     <div id="container">
         <h2 style="text-align: center;">Add Schedule</h2>
 
-        <form action="includes/insert_schedule.php" method="post">
+        <form action="product.php" method="post">
             <label for="s_date">Date:</label>
             <input type="date" name="s_date" id="s_date" required>
 
@@ -88,7 +88,7 @@
         </form>
 
         <div class="button-container">
-            <a href="schedule.php">Back to Schedule Data</a>
+            <a href="product.php">Back to Schedule Data</a>
         </div>
     </div>
 </body>

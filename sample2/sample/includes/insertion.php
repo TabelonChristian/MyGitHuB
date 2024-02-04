@@ -13,14 +13,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // Insert patient into the patient_table
-        $sql = "INSERT INTO patient_table (p_name, p_email) VALUES (:p_name, :p_email)";
+        $sql = "INSERT INTO users (name, email) VALUES (:name, :email)";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':p_name', $patientName);
-        $stmt->bindParam(':p_email', $patientEmail);
+        $stmt->bindParam(':name', $patientName);
+        $stmt->bindParam(':email', $patientEmail);
         $stmt->execute();
 
-        // Redirect back to the appointment data page after successful insertion
-        header("Location: ../appointment.php");
+        // Redirect back to the patient data page after successful insertion
+        header("Location: ../index.php");
         exit();
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();

@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE HTML>
 <html lang="en">
 <head>
@@ -14,7 +12,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
         }
 
         #container {
@@ -82,59 +80,55 @@
 <div id="container">
     <h2 style="text-align: center;">Patient Table</h2>
 
+    <?php
+    include 'includes/db_connection.php';
 
-<?php
-include 'includes/db_connection.php';
+    try {
+        $conn = connectDB();
 
-try {
-    $conn = connectDB();
+        if ($conn) { 
+            $sql = "SELECT id, name, email FROM users ";
+            $stmt = $conn->prepare($sql);
+            $stmt->execute();
 
-    if ($conn) { 
-        $sql = "SELECT id, name, email FROM users ";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        echo "<table>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Action</th>
-                </tr>";
-        foreach ($result as $row) {
-            echo "<tr>
-                    <td>{$row['id']}</td>
-                    <td>{$row['name']}</td>
-                    <td>{$row['email']}</td>
-                    <td>
-                        <form action='edit.php' method='post'>
-                            <input type='hidden' name='edit_id' value='{$row['id']}'>
-                            <button type='submit' class='edit-button'>Edit</button>
-                        </form>
-                    </td>
-                </tr>";
+            echo "<table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>";
+            foreach ($result as $row) {
+                echo "<tr>
+                        <td>{$row['id']}</td>
+                        <td>{$row['name']}</td>
+                        <td>{$row['email']}</td>
+                        <td>
+                            <form action='edit.php' method='post'>
+                                <input type='hidden' name='edit_id' value='{$row['id']}'>
+                                <button type='submit' class='edit-button'>Edit</button>
+                            </form>
+                        </td>
+                    </tr>";
+            }
+            echo "</table>";
         }
-        echo "</table>";
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    } finally {
+        if ($conn) {
+            $conn = null;
+        }
     }
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-} finally {
-    if ($conn) {
-        $conn = null;
-    }
-}
-?>
+    ?>
 
-
-<div class="button-container">
-    <a href="insert.php" class="add-button">Add Patient</a>
-    <a href="welcome.php" class="add-button">Home</a>
-    <a href="product.php" class="add-button">Appointments</a>
-
-</div>
-
+    <div class="button-container">
+        <a href="insert.php" class="add-button">Add Patient</a>
+        <a href="welcome.php" class="add-button">Home</a>
+        <a href="product.php" class="add-button">Appointments</a>
+    </div>
 </div>
 
 </body>

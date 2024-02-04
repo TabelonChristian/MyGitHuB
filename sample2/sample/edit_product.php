@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit User</title>
+    <title>Edit Schedule</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -35,7 +35,7 @@
             margin-bottom: 8px;
         }
 
-        input {
+        input, select {
             padding: 10px;
             margin-bottom: 16px;
             width: 100%;
@@ -62,6 +62,9 @@
 </head>
 <body>
 
+<!-- Rest of your code remains unchanged -->
+
+
 <div id="container">
     <h2 style="text-align: center;">Edit Schedule </h2>
 
@@ -71,33 +74,37 @@
     try {
         $conn = connectDB();
 
-        if ($conn && isset($_POST['sid'])) {
-            $prodID = $_POST['sid'];
-            $sql = "SELECT s_id, s_date, s_status FROM schedule_table WHERE sid = :pid";
+        if ($conn && isset($_POST['edit_product_id'])) {
+            $scheduleID = $_POST['edit_product_id'];
+            $sql = "SELECT s_id, s_date, s_status FROM schedule_table WHERE s_id = :schedule_id";
             $stmt = $conn->prepare($sql);
-            $stmt->bindParam(':pid', $prodID);
+            $stmt->bindParam(':schedule_id', $scheduleID);
             $stmt->execute();
 
-            $userData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $scheduleData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($userData) {
-                // User data found, render the edit form
+            if ($scheduleData) {
+                // Schedule data found, render the edit form
     ?>
-                <form action="includes/update_prod.php" method="post">
-                    <input type="hidden" name="pid" value="<?php echo $userData['s_id']; ?>">
-                    <label for="name">Name:</label>
-                    <input type="text" name="pname" id="pname" value="<?php echo $userData['s_date']; ?>">
-
-                    <label for="email">Email:</label>
-                    <input type="text" name="pstock" id="pstock" value="<?php echo $userData['s_status']; ?>" readonly>
+                 <form action="includes/update_prod.php" method="post">
+                    <input type="hidden" name="schedule_id" value="<?php echo $scheduleData['s_id']; ?>">
+                    
+                    <label for="s_date">Date:</label>
+                    <input type="date" name="s_date" id="s_date" value="<?php echo $scheduleData['s_date']; ?>">
+                    
+                    <label for="s_status">Status:</label>
+                    <select name="s_status" id="s_status">
+                        <option value="Available" <?php echo ($scheduleData['s_status'] == 'Available') ? 'selected' : ''; ?>>Available</option>
+                        <option value="Unavailable" <?php echo ($scheduleData['s_status'] == 'Unavailable') ? 'selected' : ''; ?>>Unavailable</option>
+                    </select>
 
                     <div class="button-container">
-                        <button type="submit" class="update-button">Update User</button>
+                        <button type="submit" class="update-button">Update Schedule</button>
                     </div>
                 </form>
     <?php
             } else {
-                echo "<p>User not found.</p>";
+                echo "<p>Schedule not found.</p>";
             }
         }
     } catch (PDOException $e) {

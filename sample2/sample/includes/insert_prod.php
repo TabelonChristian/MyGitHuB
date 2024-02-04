@@ -19,10 +19,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Insert appointment into the schedule_table
         $sql = "INSERT INTO schedule_table (s_id, s_date, s_status) VALUES (:s_id, :s_date, COALESCE(:s_status, 'default_value'))";
         $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':s_id', $selectedOption);
-        $stmt->bindParam(':s_date', $product);
-        $stmt->bindParam(':s_status', $status);
+      // ...
+$stmt->bindParam(':s_id', $selectedOption);
+$stmt->bindParam(':s_date', $selectedDate);
+$stmt->bindParam(':s_status', $status);
+// ...
 
+$stmt->execute();
 
         // Redirect back to the schedule data page after successful insertion
         header("Location: ../orders.php");
